@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Study Sprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff0f6;--card:#fff;--ink:#4a2545;--mute:#9a6b92;--pri:#ff6fa5;--hi:#ffd166;--ok:#2cc3a0;--bad:#ff5d6c;--line:#ffd3e4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a1530;--card:#3a1f45;--ink:#ffe9f4;--mute:#d3a6cc;--line:#5c3465}}
+:root[data-theme="dark"]{--bg:#2a1530;--card:#3a1f45;--ink:#ffe9f4;--mute:#d3a6cc;--line:#5c3465}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 10% 0,#ffd9ec55,transparent 40%),radial-gradient(circle at 90% 20%,#d9ccff55,transparent 40%),var(--bg);color:var(--ink);font-family:'Fredoka',system-ui,sans-serif;line-height:1.5;min-height:100vh}
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:20px 16px 56px}
+#bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#bg span{position:absolute;bottom:-60px;font-size:2rem;opacity:.5;animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-120vh) rotate(25deg)}}
+@keyframes pop{0%{opacity:0;transform:scale(.6) translateY(12px)}70%{transform:scale(1.06)}100%{opacity:1;transform:none}}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-6deg)}}
+h1{font-size:2.5rem;font-weight:700;margin:6px 0 2px;text-align:center}
+h1 .logo{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+.sub{color:var(--mute);margin:0 0 18px;text-align:center}
+.box{background:var(--card);border:3px solid var(--line);border-radius:24px;padding:16px;box-shadow:0 6px 0 var(--line)}
+label{font-weight:600;display:block;margin:10px 0 6px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:3px solid var(--line);border-radius:16px;padding:10px 14px}
+textarea{min-height:130px;resize:vertical}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+button{font:inherit;cursor:pointer;border:3px solid var(--line);border-radius:999px;padding:9px 18px;font-weight:600;background:var(--card);color:var(--ink);transition:transform .15s}
+button:hover:not(:disabled){transform:translateY(-2px) scale(1.04)}button:active:not(:disabled){transform:scale(.94)}
+button.main{background:var(--pri);border-color:var(--pri);color:#fff;font-size:1.1rem;padding:11px 24px;box-shadow:0 5px 0 #d94d85}
+button:disabled{opacity:.55;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.hint{font-size:.9rem;color:var(--mute)}
+.err{color:var(--bad);font-weight:600}
+#out{margin-top:24px}
+.hero{text-align:center;padding:14px;margin-bottom:14px;background:var(--card);border:3px dashed var(--pri);border-radius:24px;animation:pop .6s both}
+.hero .m{font-size:3.4rem;display:inline-block;animation:bob 2s ease-in-out infinite}
+.hero h2{margin:0}.hero q{display:block;margin-top:6px;color:var(--mute);font-style:italic}
+.lot{width:160px;height:160px;margin:0 auto}.lot:empty{display:none}
+[data-slot]{float:right;margin:0 0 6px 12px;width:130px}[data-slot]:empty{display:none}
+.pic{width:100%;border-radius:18px;border:3px solid var(--c);display:block;animation:pop .6s both}.cr{display:block;font-size:.7rem;color:var(--mute);margin-top:3px}.cr a{color:inherit}
+.tabs{display:flex;gap:6px;background:var(--card);padding:5px;border-radius:999px;border:3px solid var(--line)}
+.tabs button{flex:1;border:0;background:transparent;padding:8px 6px}
+.tabs button[aria-selected=true]{background:var(--pri);color:#fff}
+.panel{margin-top:16px}
+.sec{background:var(--card);border:3px solid var(--c,var(--line));border-radius:24px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 0 var(--c,var(--line));animation:pop .5s both}
+.sec h3{margin:0 0 6px;display:flex;gap:10px;align-items:center}
+.sec h3 i{font-style:normal;font-size:2.2rem;animation:bob 2.6s ease-in-out infinite}
+.sec ul{margin:0;padding:0;list-style:none}
+.sec li{margin:6px 0;padding-left:26px;position:relative;animation:pop .5s both;animation-delay:var(--d)}
+.sec li:before{content:'✦';position:absolute;left:0;color:var(--c)}
+.fc{perspective:900px;height:250px;cursor:pointer;margin-right:8px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,1.5,.5,1);transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:28px;padding:22px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;font-size:1.3rem;font-weight:600;overflow:auto;border:4px solid var(--c)}
+.front{background:var(--card);box-shadow:8px 8px 0 var(--c)}
+.back{background:var(--c);color:#fff;transform:rotateY(180deg);box-shadow:8px 8px 0 rgba(0,0,0,.15)}
+.tag{font-size:.85rem;opacity:.8}
+.meta{display:flex;justify-content:space-between;color:var(--mute);margin:8px 2px}
+.opt{display:block;width:100%;text-align:left;margin:9px 0;border-radius:20px}
+.opt.right{background:var(--ok);border-color:var(--ok);color:#fff;animation:pop .4s}
+.opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+.chap{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.why{background:var(--card);border:3px dashed var(--line);border-radius:18px;padding:10px 14px;margin-top:10px;animation:pop .4s}
+.big{font-size:3.2rem;font-weight:700;margin:0}
+.conf{position:fixed;top:-40px;font-size:1.8rem;z-index:5;pointer-events:none;animation:fall 2.2s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<main>
+<h1><span class="logo">📚</span> Study Sprint</h1>
+<p class="sub">Paste your notes. Get a cute summary, flashcards and quiz rounds.</p>
+<div class="box">
+<label for="subj">Subject and topics</label>
+<input type="text" id="subj" placeholder="e.g. Indian History: Mughal Empire, or DSA: trees and graphs">
+<label for="txt">Syllabus or notes (optional)</label>
+<textarea id="txt" placeholder="Copy text from your PDF and paste it here."></textarea>
+<div class="row">
+<button class="main" id="go">Make my study pack ✨</button>
+<input type="file" id="file" accept=".txt,.md" hidden>
+<button id="pick" type="button">Load .txt file</button>
+<span class="hint" id="status"></span>
+</div>
+</div>
+<section id="out" hidden>
+<div class="hero" id="hero"></div>
+<div class="tabs" role="tablist">
+<button role="tab" data-t="sum" aria-selected="true">Summary</button>
+<button role="tab" data-t="fc" aria-selected="false">Flashcards</button>
+<button role="tab" data-t="qz" aria-selected="false">Quiz</button>
+</div>
+<div class="panel" id="panel"></div>
+</section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const PAL=['#ff6fa5','#ff9f5a','#9b7bff','#2cc3a0','#ff6b6b','#e6a100'];
+let D=null,tab='sum',ci=0,flip=false,qsel=null,rsel=null,qi=0,score=0,done=false,best={};
+const LOTTIES={study:'',computer:'',history:'',science:'',math:'',celebrate:''}; // paste .json animation URLs from lottiefiles.com
+async function ask(prompt){const r=await fetch('/api/generate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({prompt})});if(!r.ok)throw new Error('api');const j=await r.json();return JSON.parse(j.text.replace(/```json|```/g,'').trim());}
+async function wikiImg(q){try{const u='https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrlimit=1&gsrsearch='+encodeURIComponent(q)+'&prop=pageimages|info&piprop=thumbnail&pithumbsize=400&inprop=url&format=json&origin=*';const j=await(await fetch(u)).json();const p=Object.values(j.query.pages)[0];if(p.thumbnail)return{src:p.thumbnail.source,page:p.fullurl,title:p.title};}catch(e){}return null;}
+function loadImgs(){(D.summary||[]).forEach(async(s,k)=>{if(!s.image_query)return;s.imgP??=wikiImg(s.image_query);const im=await s.imgP,slot=document.querySelector('[data-slot="'+k+'"]');if(slot&&im)slot.innerHTML=`<img class="pic" loading="lazy" src="${esc(im.src)}" alt="${esc(im.title)}"><small class="cr">Image: <a href="${esc(im.page)}" target="_blank" rel="noopener">Wikipedia</a></small>`;});}
+function playLottie(){const u=LOTTIES[D.animation];if(u&&window.lottie)lottie.loadAnimation({container:$('#lot'),renderer:'svg',loop:true,autoplay:true,path:u});}
+
+$('#pick').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('#txt').value=r.result;};r.readAsText(f);};
+
+function floaters(list){
+  $('#bg').innerHTML=Array.from({length:14},(_,i)=>`<span style="left:${Math.random()*95}%;animation-duration:${14+Math.random()*14}s;animation-delay:${-Math.random()*20}s;font-size:${1.4+Math.random()*1.6}rem">${esc(list[i%list.length])}</span>`).join('');
+}
+function confetti(){
+  const e=['🎉','⭐','💖','✨','🎊'];
+  for(let i=0;i<24;i++){const s=document.createElement('span');s.className='conf';s.textContent=e[i%5];s.style.left=Math.random()*95+'%';s.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),3200);}
+}
+
+$('#go').onclick=async()=>{
+  const subj=$('#subj').value.trim(),txt=$('#txt').value.trim().slice(0,14000);
+  if(!subj&&!txt){$('#status').innerHTML='<span class="err">Add a subject or paste some notes first.</span>';return;}
+  const btn=$('#go');btn.disabled=true;$('#status').textContent='Cooking your pack... up to a minute 🍳';
+  try{
+    D=await ask(`You are a fun, friendly study coach for a college student studying the night before an exam. Subject/topics: "${subj}".
+Source material (may be empty; if so use your own knowledge):
+"""${txt}"""
+Return ONLY JSON: {"subject":string,"mascot":one emoji that fits the subject,"quote":a short real or well-known quote relevant to the subject with its author,"animation":one of study|computer|history|science|math|celebrate that best fits the subject,"floaters":[8 different emojis themed to the subject, e.g. crowns/forts/scrolls for history, 💻 🌳 🔗 🧮 for data structures],"summary":[{"emoji":one emoji for the chapter,"image_query":the English Wikipedia article title most likely to have a good picture for this chapter (a person, place or concept, e.g. "Akbar" or "Binary tree"),"title":string,"points":[string]}],"flashcards":[{"q":string,"a":string}]}
+Rules: 4-6 summary sections with 3-5 short plain-language, upbeat bullets each. 14 flashcards with short answers.`);
+    tab='sum';ci=0;flip=false;qsel=null;rsel=null;best={};
+    floaters(D.floaters&&D.floaters.length?D.floaters:['📚','✨','💖']);
+    $('#hero').innerHTML=`<span class="m">${esc(D.mascot||'📚')}</span><h2>${esc(D.subject||subj)}</h2><q>${esc(D.quote||'')}</q><div id="lot" class="lot"></div>`;playLottie();
+    $('#out').hidden=false;$('#status').textContent='';setTab('sum');
+    $('#out').scrollIntoView({behavior:'smooth'});
+  }catch(e){
+    $('#status').innerHTML='<span class="err">'+(e&&e.code==='not_granted'?'Permission was declined.':'Something went wrong. Try again with shorter notes.')+'</span>';
+  }
+  btn.disabled=false;
+};
+
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
+function setTab(t){tab=t;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));render();}
+
+async function loadRounds(k){
+  const c=D.summary[k],p=$('#panel');
+  p.innerHTML='<div class="sec" style="text-align:center">Brewing 5 quiz rounds... 🧪</div>';
+  try{
+    const r=await ask(`Subject: "${D.subject}". Chapter: "${c.title}". Key points: ${JSON.stringify(c.points)}.
+Return ONLY JSON: {"rounds":[{"name":string (short, fun, e.g. "Quick recall"),"questions":[{"q":string,"options":[4 strings],"answer":0-3 index,"why":one sentence}]}]}
+Make exactly 5 separate quiz rounds, each with exactly 4 MCQs and a different focus (recall, definitions, application, tricky traps, mixed challenge). Plausible distractors, varied answer positions.`);
+    c.rounds=r.rounds;render();
+  }catch(e){p.innerHTML='<div class="sec"><span class="err">Could not make the quizzes.</span> <button id="retry">Try again</button></div>';$('#retry').onclick=()=>loadRounds(k);}
+}
+
+function render(){
+  const p=$('#panel');if(!D)return;
+  if(tab==='sum'){
+    p.innerHTML=(D.summary||[]).map((s,k)=>`<div class="sec" style="--c:${PAL[k%6]};animation-delay:${k*.12}s"><div data-slot="${k}"></div><h3><i>${esc(s.emoji||'📖')}</i>${esc(s.title)}</h3><ul>${(s.points||[]).map((x,j)=>`<li style="--d:${k*.12+j*.1+.2}s">${esc(x)}</li>`).join('')}</ul></div>`).join('');loadImgs();
+  }else if(tab==='fc'){
+    const f=D.flashcards||[];if(!f.length){p.textContent='No flashcards.';return;}
+    const c=f[ci];
+    p.innerHTML=`<div class="meta"><span>Card ${ci+1} of ${f.length}</span><span>Tap to flip 👆</span></div>
+    <div class="fc ${flip?'flip':''}" id="card" style="--c:${PAL[ci%6]}" tabindex="0" role="button" aria-label="Flip card"><div class="fc-in"><div class="face front"><span class="tag">Question</span>${esc(c.q)}</div><div class="face back"><span class="tag">Answer</span>${esc(c.a)}</div></div></div>
+    <div class="row"><button id="prev">Back</button><button class="main" id="next">Next card</button><button id="shuf">Shuffle 🔀</button></div>`;
+    const fl=()=>{flip=!flip;$('#card').classList.toggle('flip',flip);};
+    $('#card').onclick=fl;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fl();}};
+    $('#prev').onclick=()=>{ci=(ci-1+f.length)%f.length;flip=false;render();};
+    $('#next').onclick=()=>{ci=(ci+1)%f.length;flip=false;render();};
+    $('#shuf').onclick=()=>{f.sort(()=>Math.random()-.5);ci=0;flip=false;render();};
+  }else{
+    const ch=D.summary||[];
+    if(qsel===null){
+      p.innerHTML='<p class="hint">Pick a chapter. Each has 5 quiz rounds.</p>'+ch.map((c,k)=>`<button class="opt chap" data-k="${k}"><span>${esc(c.emoji||'📖')} ${esc(c.title)}</span><span>5 rounds</span></button>`).join('');
+      p.querySelectorAll('.chap').forEach(b=>b.onclick=()=>{qsel=+b.dataset.k;rsel=null;if(!ch[qsel].rounds)loadRounds(qsel);else render();});return;
+    }
+    const c=ch[qsel];if(!c.rounds)return;
+    if(rsel===null){
+      p.innerHTML=`<button id="chs">← Chapters</button><h3>${esc(c.emoji||'')} ${esc(c.title)}</h3>`+c.rounds.map((r,k)=>`<button class="opt chap" data-r="${k}"><span>Round ${k+1}: ${esc(r.name)}</span><span>${best[qsel+'_'+k]!==undefined?'⭐ '+best[qsel+'_'+k]+'/'+r.questions.length:r.questions.length+' Qs'}</span></button>`).join('');
+      $('#chs').onclick=()=>{qsel=null;render();};
+      p.querySelectorAll('.chap').forEach(b=>b.onclick=()=>{rsel=+b.dataset.r;qi=0;score=0;done=false;render();});return;
+    }
+    const q=c.rounds[rsel].questions;
+    if(qi>=q.length){
+      const key=qsel+'_'+rsel;best[key]=Math.max(best[key]??0,score);
+      p.innerHTML=`<div class="sec" style="text-align:center"><p class="big">${score}/${q.length}</p><p>${score===q.length?'Perfect! 🎉':score/q.length>=.5?'Nice! One more try? 💪':'Peek at the summary, then retry 📖'}</p><div class="row" style="justify-content:center"><button class="main" id="again">Retry</button><button id="rds">All rounds</button></div></div>`;
+      if(score===q.length)confetti();
+      $('#again').onclick=()=>{qi=0;score=0;done=false;render();};$('#rds').onclick=()=>{rsel=null;render();};return;
+    }
+    const x=q[qi];
+    p.innerHTML=`<div class="meta"><span>Round ${rsel+1}: ${qi+1} of ${q.length}</span><span>Score ${score}</span></div>
+    <div class="sec"><h3>${esc(x.q)}</h3></div>
+    ${x.options.map((o,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join('')}
+    <div id="fb"></div>`;
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(done)return;done=true;const i=+b.dataset.i,ok=i===x.answer;if(ok)score++;
+      document.querySelectorAll('.opt').forEach(o=>{if(+o.dataset.i===x.answer)o.classList.add('right');});
+      if(!ok)b.classList.add('wrong');
+      $('#fb').innerHTML=`<div class="why"><strong>${ok?'Yes! 💖':'Oops 🙈'}</strong> ${esc(x.why)}</div><div class="row"><button class="main" id="nq">${qi+1===q.length?'See score':'Next question'}</button></div>`;
+      $('#nq').onclick=()=>{qi++;done=false;render();};
+    });
+  }
+}
+</script>
+</body>
+</html>
